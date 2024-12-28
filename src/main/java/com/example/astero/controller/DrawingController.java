@@ -17,6 +17,8 @@ public class DrawingController {
     private final Pane drawingPane;
     private DrawingTool currentTool;
 
+    private Runnable onToolChange;
+
     private final List<DraggableShape> shapes = new ArrayList<>();
 
     private DraggableShape selectedShape = null;
@@ -54,7 +56,9 @@ public class DrawingController {
 
     public void setCurrentTool(DrawingTool tool) {
         this.currentTool = tool;
+        notifyToolChange();
     }
+
 
     public DrawingTool getCurrentTool() {
         return currentTool;
@@ -93,4 +97,16 @@ public class DrawingController {
             selectedShape = null;
         }
     }
+
+    public void setOnToolChange(Runnable callback) {
+        this.onToolChange = callback;
+    }
+
+    public void notifyToolChange() {
+        if (onToolChange != null) {
+            onToolChange.run();
+        }
+    }
+
+
 }

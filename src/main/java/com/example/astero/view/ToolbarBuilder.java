@@ -48,13 +48,26 @@ public class ToolbarBuilder {
         );
 
         ToggleButton selectBtn = new ToggleButton("Select");
-        selectBtn.setOnAction(e -> drawingController.setCurrentTool(new SelectTool()));
+        selectBtn.setOnAction(e -> {
+            if (selectBtn.isSelected()) {
+                drawingController.setCurrentTool(new SelectTool());
+            } else {
+                drawingController.setCurrentTool(null);
+            }
+        });
         selectBtn.setSelected(true);
 
         Button deleteBtn = new Button("Delete");
         deleteBtn.setOnAction(e -> drawingController.deleteSelectedShape());
 
         HBox editingTools = new HBox(5, selectBtn, deleteBtn);
+
+        drawingController.setOnToolChange(() -> {
+            rectBtn.setSelected(false);
+            circleBtn.setSelected(false);
+            triBtn.setSelected(false);
+            selectBtn.setSelected(drawingController.getCurrentTool() instanceof SelectTool);
+        });
 
         return new ToolBar(
                 createLabel,
