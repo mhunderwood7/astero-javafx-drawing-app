@@ -16,8 +16,8 @@ public class ShapeController {
     private static void onMousePressed(DraggableShape shapeModel, DrawingController controller, MouseEvent event) {
         if (controller.isSelectMode()) {
             controller.selectShape(shapeModel.getNode());
-            shapeModel.setDragStartX(event.getX());
-            shapeModel.setDragStartY(event.getY());
+            shapeModel.setDragStartX(event.getSceneX() - shapeModel.getNode().getLayoutX());
+            shapeModel.setDragStartY(event.getSceneY() - shapeModel.getNode().getLayoutY());
             shapeModel.setBeingDragged(true);
             shapeModel.getNode().setCursor(Cursor.MOVE);
         }
@@ -26,12 +26,15 @@ public class ShapeController {
 
     private static void onMouseDragged(DraggableShape shapeModel, DrawingController controller, MouseEvent event) {
         if (controller.isSelectMode() && shapeModel.isBeingDragged()) {
-            double offsetX = event.getX() - shapeModel.getDragStartX();
-            double offsetY = event.getY() - shapeModel.getDragStartY();
-            shapeModel.move(offsetX, offsetY);
+            double newLayoutX = event.getSceneX() - shapeModel.getDragStartX();
+            double newLayoutY = event.getSceneY() - shapeModel.getDragStartY();
+
+            shapeModel.getNode().setLayoutX(newLayoutX);
+            shapeModel.getNode().setLayoutY(newLayoutY);
         }
         event.consume();
     }
+
 
     private static void onMouseReleased(DraggableShape shapeModel, DrawingController controller, MouseEvent event) {
         shapeModel.setBeingDragged(false);
